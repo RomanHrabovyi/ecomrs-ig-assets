@@ -6,8 +6,8 @@ Usage:
 
 content.json schema:
 {
-  "handle": "Роман Грабовий",          # footer left label
-  "footer_email": "roman.ret.mark@gmail.com",  # footer on last slide
+  "handle": "@ecom__rs",               # footer left label (бренд-хендл, НЕ особисте імʼя)
+  "footer_email": "",                   # лишай порожнім — НЕ писати особистий email на слайдах
   "slides": [
      # kind "cover":
      {"kind":"cover","label":"KLAVIYO · EMAIL · RETENTION",
@@ -32,8 +32,12 @@ from playwright.sync_api import sync_playwright
 HERE = os.path.dirname(os.path.abspath(__file__))
 FONTDIR = os.path.join(HERE, "fonts")
 
-INK="#0d0c0b"; INK2="#141210"; PAPER="#f3ece1"; MUTE="#8a8073"; AMBER="#e8a33d"
-LINE="rgba(243,236,225,0.12)"
+# ECOMRS brand palette (ТІЛЬКИ бренд-кольори):
+# фон графіт/чорний, акцент — зелений смарагд (носій уваги), золото — лише тонкі лінії/дрібні деталі.
+INK="#0c0c0c"; INK2="#161616"; PAPER="#ececea"; MUTE="#8a8f88"
+AMBER="#10a060"   # зелений смарагд — головний акцент (виділені слова, цифри, стрілки)
+GOLD="#c8a24c"    # золото — лише тонкі канти/лінії
+LINE="rgba(200,162,76,0.22)"
 
 def b64(name):
     with open(os.path.join(FONTDIR, name), "rb") as f:
@@ -78,7 +82,7 @@ html,body{{width:1080px;height:1350px;}}
 .toplabel{{font-family:'PlexMono';font-weight:400;font-size:21px;letter-spacing:0.42em;
   color:{MUTE};text-transform:uppercase;display:flex;align-items:center;gap:20px;}}
 .toplabel .dot{{width:11px;height:11px;border-radius:50%;background:{AMBER};
-  box-shadow:0 0 0 6px rgba(232,163,61,0.14);display:inline-block;flex:0 0 auto;}}
+  box-shadow:0 0 0 6px rgba(16,160,96,0.14);display:inline-block;flex:0 0 auto;}}
 .rule{{height:1px;background:{LINE};width:100%;}}
 .mid{{flex:1;display:flex;flex-direction:column;justify-content:center;}}
 .h1{{font-family:'PlexSerif';font-weight:700;color:{PAPER};letter-spacing:-0.015em;}}
@@ -149,7 +153,7 @@ def main():
     out=sys.argv[2] if len(sys.argv)>2 else "out"
     os.makedirs(out, exist_ok=True)
     slides=content["slides"]; total=len(slides)
-    handle=content.get("handle","Роман Грабовий"); email=content.get("footer_email","")
+    handle=content.get("handle","@ecom__rs"); email=content.get("footer_email","")
     pages=[]
     for i,s in enumerate(slides):
         inner=RENDER[s["kind"]](s)
