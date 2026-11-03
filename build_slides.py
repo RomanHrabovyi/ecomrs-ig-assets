@@ -24,7 +24,7 @@ content.json schema:
       "cta":["→ Пишіть у Direct","↳ деталі — в шапці профілю"]}
   ]
 }
-Footer page numbers (NN — total) are added automatically.
+Слайди рендеряться БЕЗ футера: без хендла/імені, без email і без номерів сторінок.
 """
 import sys, json, base64, os, html, re
 from playwright.sync_api import sync_playwright
@@ -77,7 +77,7 @@ html,body{{width:1080px;height:1350px;}}
 .slide{{width:1080px;height:1350px;position:relative;overflow:hidden;
   background:radial-gradient(130% 90% at 100% 0%, {INK2} 0%, {INK} 55%),{INK};
   color:{PAPER};padding:96px 92px;display:flex;flex-direction:column;}}
-.grain{{position:absolute;inset:0;opacity:0.035;pointer-events:none;
+.grain{{position:absolute;inset:0;opacity:0.075;pointer-events:none;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");}}
 .toplabel{{font-family:'PlexMono';font-weight:400;font-size:21px;letter-spacing:0.42em;
   color:{MUTE};text-transform:uppercase;display:flex;align-items:center;gap:20px;}}
@@ -86,7 +86,9 @@ html,body{{width:1080px;height:1350px;}}
 .rule{{height:1px;background:{LINE};width:100%;}}
 .mid{{flex:1;display:flex;flex-direction:column;justify-content:center;}}
 .h1{{font-family:'PlexSerif';font-weight:700;color:{PAPER};letter-spacing:-0.015em;}}
-.amber{{color:{AMBER};}}
+.amber{{color:{AMBER};
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 24' preserveAspectRatio='none'%3E%3Cpath d='M4 16 C 68 7 128 22 190 13 C 242 6 280 13 296 16' stroke='%23c8a24c' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:0 98%;background-size:100% 0.24em;padding-bottom:0.06em;}}
 .foot{{display:flex;justify-content:space-between;align-items:flex-end;
   font-family:'PlexMono';font-size:22px;letter-spacing:0.08em;color:{MUTE};}}
 .foot b{{color:{PAPER};font-weight:400;}}
@@ -144,9 +146,8 @@ def render_cta(s):
 RENDER={"cover":render_cover,"list":render_list,"cta":render_cta}
 
 def footer(handle, email, n, total, last):
-    left = f"<b>{html.escape(email)}</b>" if (last and email) else f"<b>{html.escape(handle)}</b>"
-    return (f"<div class='rule' style='margin-bottom:34px;'></div>"
-            f"<div class='foot'><span>{left}</span><span>{n:02d} — {total:02d}</span></div>")
+    # Слайди БЕЗ футера: без імені/хендла, без email, без номерів сторінок — лише потрібна інформація.
+    return ""
 
 def main():
     content=json.load(open(sys.argv[1], encoding="utf-8"))
